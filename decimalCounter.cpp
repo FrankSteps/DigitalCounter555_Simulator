@@ -4,10 +4,14 @@
 
 struct Converter{
     void toBinary(unsigned int decimal, int bits = 10){
-        for(int i = bits-1; i >= 0; i--){
-            std::cout << ((decimal >> i) & 1);
-         }
-    std::cout << std::endl;
+        if(bits >=  0 && bits <= 10){
+            for(int i = bits-1; i >= 0; i--){
+                std::cout << ((decimal >> i) & 1);
+            }
+            std::cout << std::endl;
+        }else{
+            std::cerr << "error :: reset Qpin isn't correct. Please, put a pin between 0 and 10" << std::endl;
+        }
     }
 };
 
@@ -21,10 +25,12 @@ class Chip4017{
         Chip4017(double limitReset) : LimitReset(limitReset) {};
 
         void shift(){
-            if(Out >= (1u << (LimitReset-1))){
-                reset();
-            } else {
-                Out = Out << 1;
+            if(LimitReset <= 10){ //comparison of unsigned expression in ‘>= 0’ is always true
+                if(Out >= (1u << (LimitReset-1))){
+                    reset();
+                } else {
+                    Out = Out << 1;
+                }
             }
         }
 
@@ -71,17 +77,15 @@ class Chip555{
 
 
 int main(){ 
-    const int Qpin = 8;
+    const int resetQP = 10;
 
-    Chip4017 chip4017(Qpin);
-    Chip555 chip555(500, 470, 0.001);
+    Chip4017 chip4017(resetQP);
+    Chip555 chip555(1000, 10000, 7.37e-6);
     Converter converter;
-
-    char pls;
 
     // cycle 
     while(true){
-        converter.toBinary(chip4017.getOut(), Qpin);
+        converter.toBinary(chip4017.getOut(), resetQP);
         chip555.pulse();
         chip4017.shift();
     }
