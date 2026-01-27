@@ -1,6 +1,5 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17
-LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 TARGET = decimalCounter
 SRC = decimalCounter.cpp
@@ -8,7 +7,7 @@ SRC = decimalCounter.cpp
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 
 run: $(TARGET)
 	./$(TARGET)
