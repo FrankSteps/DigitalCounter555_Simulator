@@ -1,6 +1,15 @@
 #include <iostream>
+#include <string>
+#include <stdlib.h>
 #include <chrono>
 #include <thread>
+
+
+[[noreturn]] void CriticalError(const std::string& msg){
+    std::cerr << msg << std::endl;
+    std::exit(EXIT_FAILURE);
+}
+
 
 struct Converter{
     void toBinary(unsigned int decimal, int bits = 10){
@@ -10,10 +19,11 @@ struct Converter{
             }
             std::cout << std::endl;
         }else{
-            std::cerr << "error :: reset Qpin isn't correct. Please, put a pin between 0 and 10" << std::endl;
+            CriticalError("error :: reset Qpin isn't correct. Please, put a pin between 0 and 10");
         }
     }
 };
+
 
 
 class Chip4017{
@@ -25,7 +35,7 @@ class Chip4017{
         Chip4017(double limitReset) : LimitReset(limitReset) {};
 
         void shift(){
-            if(LimitReset <= 10){ //comparison of unsigned expression in ‘>= 0’ is always true
+            if(LimitReset <= 10){   //comparison of unsigned expression in ‘>= 0’ is always true
                 if(Out >= (1u << (LimitReset-1))){
                     reset();
                 } else {
